@@ -8,7 +8,9 @@ export const authenticateToken = (req, res, next) =>{
     //and the value in the second position from the start, is the token
     const token = authHeader && authHeader.split(" ")[1];
 
-    if(token == null) return res.sendStatus(401);
+    if(token == null) return res.send({
+        message : "Token doesn't exist"
+    });
 
     jwt.verify(token, KEYS.TOKEN_SECRET, (err, user) =>{
         console.log(err);
