@@ -8,7 +8,7 @@ const app = Express();
 app.use(Express.json())
 
 app.post("/jwt-api/login",(req, res)=>{
-    const token = generateAccessToken({username: req.body.username})
+    const token = generateAccessToken({username: req.body.username, email: req.body.email})
     res.json(token)
 })
 
