@@ -2,7 +2,8 @@ import passport from "passport";
 import { Strategy as localStrategy } from "passport-local";
 import { Strategy as JWTStrategy } from "passport-jwt";
 import { ExtractJwt } from "passport-jwt";
-import UserModel from "../model/model.js";
+import { UserModel } from "../model/model.js";
+import { KEYS } from "../config/keys.js";
 
 //Use passport-jwt to extract JWT from the query param.
 //Verify that this token is signed with the secret or key set during logging in ('TOP_SECRET')
@@ -14,8 +15,8 @@ import UserModel from "../model/model.js";
 passport.use(
   new JWTStrategy(
     {
-      secretOrKey: "TOP_SECRET",
-      jwtFromRequest: ExtractJwt.fromUrlQueryParameter("secret_token"),
+      secretOrKey: KEYS.TOKEN_SECRET,
+      jwtFromRequest: ExtractJwt.fromUrlQueryParameter(KEYS.TOKEN_SECRET),
     },
     async (token, done) => {
       try {
@@ -32,19 +33,21 @@ passport.use(
 //Otherwise, report an error
 passport.use(
   "signup",
-  new localStrategy({
-    usernameField: "email",
-    passwordField: "password",
-  }),
-  async (email, password, done) => {
-    try {
-      const user = await UserModel.create({ email, password });
+  new localStrategy(
+    {
+      usernameField: "email",
+      passwordField: "password",
+    },
+    async (email, password, done) => {
+      try {
+        const user = await UserModel.create({ email, password });
 
-      return done(null, user);
-    } catch (error) {
-      done(error);
+        return done(null, user);
+      } catch (error) {
+        done(error);
+      }
     }
-  }
+  )
 );
 
 //Find user associated with email

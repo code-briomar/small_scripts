@@ -1,7 +1,7 @@
 import Express from "express";
 import passport from "passport";
 import jwt from "jsonwebtoken";
-export const router = Express.Router();
+const router = Express.Router();
 
 //Authenticate POST request to /signup route with passport middleware
 router.post(
@@ -20,7 +20,7 @@ router.post("/login", async (req, res, next) => {
   passport.authenticate("login", async (err, user, info) => {
     try {
       if (err || !user) {
-        const error = new Error("An error occured");
+        const error = new Error("An error occurred");
 
         return next(error);
       }
@@ -28,7 +28,7 @@ router.post("/login", async (req, res, next) => {
       //Session set to false to prevent storing user details in a session
       //User expected to send the token on each request to secure the routes
 
-      //Useful but not recommended for perfomance
+      //Useful but not recommended for performance
       req.login(user, { session: false }, async (error) => {
         if (error) return next(error);
 
@@ -45,3 +45,5 @@ router.post("/login", async (req, res, next) => {
     }
   })(req, res, next);
 });
+
+export default router;
